@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vidio iOS App Clone & Editor</title>
+    <style>
+        /* --- GLOBAL & LAYOUT STYLES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: #0b0b0c;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* --- EDITOR STYLES (TOP SECTION) --- */
+        .editor-panel {
+            width: 100%;
+            max-width: 412px;
+            background: #1c1c1e;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2c2c2e;
+        }
+
+        .editor-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #f31c4e;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #aeaeae;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            background: #2c2c2e;
+            border: 1px solid #3a3a3c;
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #f31c4e;
+        }
+
+        /* --- MOBILE DEVICE SIMULATION FRAME --- */
+        .phone-viewport {
+            width: 390px;
+            height: 844px;
+            background-color: #141414;
+            border-radius: 48px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 0 12px #2c2c2e, 0 20px 60px rgba(0,0,0,0.8);
+            border: 4px solid #000;
+        }
+
+        /* Dynamic iOS Notch Space Isolation */
+        .phone-viewport::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 110px;
+            height: 30px;
+            background: #000;
+            border-bottom-left-radius: 18px;
+            border-bottom-right-radius: 18px;
+            z-index: 10000;
+            pointer-events: none;
+        }
+
+        /* --- IOS STATUS BAR --- */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 47px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 28px 0 32px;
+            z-index: 999;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            pointer-events: none;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-icon {
+            width: 17px;
+            height: 11px;
+            fill: currentColor;
+        }
+
+        .status-battery {
+            width: 25px;
+            height: 12px;
+        }
+
+        /* --- HOMEPAGE UI STRUCTURE --- */
+        .app-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow-y: scroll;
+            scrollbar-width: none; /* Hide standard scrollbar Firefox */
+        }
+
+        .app-container::-webkit-scrollbar {
+            display: none; /* Hide standard scrollbar Chrome/Safari */
+        }
+
+        /* Fixed / Absolute Overlay Elements Context */
+        .header-sticky {
+            position: absolute;
+            top: 47px;
+            left: 0;
+            width: 100%;
+            z-index: 900;
+            background: linear-gradient(to bottom, rgba(20,20,20,0.9) 0%, rgba(20,20,20,0) 100%);
+            padding: 8px 16px;
+        }
+
+        .top-action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 44px;
+        }
+
+        .vidio-logo {
+            height: 28px;
+            display: flex;
+            align-items: center;
+        }
+
+        .vidio-logo svg {
+            height: 100%;
+        }
+
+        .right-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .action-icon-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e056fd, #7ed6df);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* Category Menu Nav Scroll */
+        .category-nav-container {
+            margin-top: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+        }
+        .category-nav-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tabs {
+            display: inline-flex;
+            gap: 8px;
+            padding-bottom: 4px;
+        }
+
+        .tab-pill {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-pill.active {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.25);
+            color: #fff;
+        }
+
+        /* --- BOTTOM NAVIGATION BAR WITH TRANSLUCENT BLUR --- */
+        .bottom-nav-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 83px;
+            background: rgba(20, 20, 20, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-around;
+            padding-top: 6px;
+            z-index: 950;
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8e8e93;
+            text-decoration: none;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: #ffffff;
+        }
+
+        .nav-icon {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* --- IN-APP BANNER POPUP OVERLAY MODIFIED FOR INTEGRATION --- */
+        .popup-backdrop-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.65);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 0.25s ease;
+        }
+
+        .popup-backdrop-overlay.hidden {
+            display: none;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Original Source Code Classes Integrated Exactly */
+        .container {
+            width: 100%;
+            max-width: 330px;
+            background-image: transparent;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 0px;
+            position: relative;
+            color: white;
+        }
+
+        .close-icon {
+            background-color: transparent;
+            border: none;
+            color: white;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .carousel {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .promo-image {
+            width: 100%;
+            height: auto;
+            border-radius: 30px;
+            display: block;
+        }
+
+        .promo-button {
+            background: linear-gradient(135deg, #f31c4e, #ff0000);
+            display: inline-block;
+            width: auto;
+            min-width: 170px;
+            padding: 10px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 750;
+            font-size: 20px;
+            border-radius: 13px;
+            margin-top: -20px;
+            position: relative;
+            z-index: 20;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(255, 0, 54, 0.5);
+        }
+
+        /* GLOSSY AUTO JALAN TERUS */
+        .promo-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -75%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                rgba(255, 255, 255, 0.2),
+                rgba(255, 255, 255, 0.6),
+                rgba(255, 255, 255, 0.2)
+            );
+            transform: skewX(-25deg);
+            animation: shineLoop 1.7s infinite;
+        }
+
+        /* ANIMASI LOOP */
+        @keyframes shineLoop {
+            0% {
+                left: -75%;
+            }
+            100% {
+                left: 125%;
+            }
+        }
+
+        .promo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgb(255, 0, 55);
+        }
+
+        .close-button {
+            position: absolute;
+            top: -18px;
+            right: -23px;
+            background: none;
+            border: none;
+            padding: 0;
+            z-index: 9999;
+        }
+
+        .close {
+            display: block;
+            width: 95%;
+            position: relative;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="editor-panel">
+        <div class="editor-title">Preview InApp</div>
+        <div class="form-group">
+            <label for="inputHeroUrl">Homepage URL</label>
+            <input type="text" id="inputHeroUrl" value="https://thumbor.prod.vidiocdn.com/XU3KP7neB65TmDK_yG1NuzyX9vM=/filters:quality(90)/vidio-pns-prod-gandiwaimage/uploads/image/image_file/23512/Desain_tanpa_judul__4_.png">
+        </div>
+        <div class="form-group">
+            <label for="inputPopupKv">Popup KV URL</label>
+            <input type="text" id="inputPopupKv" value="https://thumbor.prod.vidiocdn.com/aoSMOLPoW-gTdqBPcz8opUf6l_U=/filters:quality(90)/vidio-pns-prod-gandiwaimage/uploads/image/image_file/23447/MANIS_DI_BIBIR_EXPRESS_EP3.png">
+        </div>
+        <div class="form-group">
+            <label for="inputCtaText">CTA Text</label>
+            <input type="text" id="inputCtaText" value="Nonton Duluan">
+        </div>
+        <div class="form-group">
+            <label for="inputTime">Time (Status Bar)</label>
+            <input type="text" id="inputTime" value="1.41">
+        </div>
+    </div>
+    
+
+    <div class="phone-viewport">
+        
+        <div class="status-bar">
+            <div class="status-left" id="statusBarTime">1.41</div>
+            <div class="status-right">
+                <svg class="status-icon" viewBox="0 0 18 12">
+                    <path d="M1 10h2v2H1zm4-3h2v5H5zm4-3h2v8H9zm4-4h2v12h-2z"/>
+                </svg>
+                <svg class="status-icon" viewBox="0 0 16 12">
+                    <path d="M8 2c2.5 0 4.7 1 6.4 2.6l1.4-1.4C13.7 1.3 11 0 8 0S2.3 1.3.2 3.2l1.4 1.4C3.3 3 5.5 2 8 2zm0 3.5c1.5 0 2.9.6 3.9 1.6l1.4-1.4C11.7 4.1 9.9 3.5 8 3.5s-3.7.6-5.3 2.2l1.4 1.4c1-1 2.4-1.6 3.9-1.6zm0 3.5c.6 0 1.1.2 1.5.6l1.4-1.4C10.1 7.4 9.1 7 8 7s-2.1.4-2.9 1.2l1.4 1.4c.4-.4.9-.6 1.5-.6zm0 2c.3 0 .5-.2.5-.5s-.2-.5-.5-.5-.5.2-.5.5.2.5.5.5z"/>
+                </svg>
+                <svg class="status-battery" viewBox="0 0 27 13">
+                    <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#ffffff" stroke-opacity="0.9"/>
+                    <rect x="2.5" y="2.5" width="19" height="8" rx="1.5" fill="#ffffff"/>
+                    <path d="M25 4.5v4c0 .8-.5 1-1 1v-6c.5 0 1 .2 1 1z" fill="#ffffff"/>
+                </svg>
+            </div>
+        </div>
+
+            <img
+    id="heroImageElement"
+    src="https://thumbor.prod.vidiocdn.com/XU3KP7neB65TmDK_yG1NuzyX9vM=/filters:quality(90)/vidio-pns-prod-gandiwaimage/uploads/image/image_file/23512/Desain_tanpa_judul__4_.png"
+    alt="Homepage Screenshot"
+    style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top;
+        display: block;
+        z-index: 1;
+    "
+>
+
+
+        <div class="popup-backdrop-overlay" id="popupOverlay">
+            <div
+              class="container"
+              style="
+                position: absolute;
+                line-height: 1.42857;
+                font-family: CircularXXWeb-Regular, Arial, sans-serif;
+                -webkit-font-smoothing: antialiased;
+                font-feature-settings: &quot;ss08&quot; on;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                right: 0px;
+                border: 2px solid;
+                border-color: rgba(120, 255, 255, 0) !important;
+                border-radius: 0px;
+                background-repeat: no-repeat;
+                background-size: 100% 100%;
+                width: 100%;
+                text-align: center;
+                box-shadow: none;
+              "
+            >
+              <button class="close-button" id="closePopupButton" data-dismiss="true">
+                <img
+                  class="close"
+                  src="https://thumbor.prod.vidiocdn.com/-TZJl0nIYqCx4D3ffuR5Jint3eA=/filters:quality(90)/vidio-pns-prod-gandiwaimage/uploads/image/image_file/22924/cancel__2_.png"
+                  alt="NA"
+                />
+              </button>
+              <div class="carousel">
+                <div class="carousel-inner">
+                  <div class="carousel-item">
+                    <a href="#">
+                      <img
+                        id="popupKvImage"
+                        src=""
+                        alt="Promo Image 1"
+                        class="promo-image"
+                        style="object-fit: cover;"
+                      />
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <a class="promo-button" id="popupCtaButton" href="#">Ambil Promo Sekarang</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // DOM Element Cache Selectors
+        const inputHeroUrl = document.getElementById('inputHeroUrl');
+        const inputPopupKv = document.getElementById('inputPopupKv');
+        const inputCtaText = document.getElementById('inputCtaText');
+        const inputTime = document.getElementById('inputTime');
+
+        const heroImageElement = document.getElementById('heroImageElement');
+        const statusBarTime = document.getElementById('statusBarTime');
+        const popupKvImage = document.getElementById('popupKvImage');
+        const popupCtaButton = document.getElementById('popupCtaButton');
+        const popupOverlay = document.getElementById('popupOverlay');
+        const closePopupButton = document.getElementById('closePopupButton');
+
+        /**
+         * Real-time sync pipeline linking values from form field inputs 
+         * directly into responsive visual components instantly.
+         */
+        function synchronizeRealtimePreview() {
+            // 1. Update Homepage Main Hero Placement Background
+            heroImageElement.src = inputHeroUrl.value;
+
+            // 2. Update Overlay Modal Key Visual Vector Graphic Asset
+            popupKvImage.src = inputPopupKv.value;
+
+            // 3. Update Text Content inside High-Gloss CTA Button Component
+            popupCtaButton.textContent = inputCtaText.value;
+
+            // 4. Synchronize iPhone Telephony Status Bar Clock Data
+            statusBarTime.textContent = inputTime.value;
+        }
+
+        // Add Realtime input listeners to all text fields
+        inputHeroUrl.addEventListener('input', synchronizeRealtimePreview);
+        inputCtaText.addEventListener('input', () => {
+            synchronizeRealtimePreview();
+            // Force modal visibility instantly back to context state when typing elements inside it
+            popupOverlay.classList.remove('hidden');
+        });
+        inputPopupKv.addEventListener('input', () => {
+            synchronizeRealtimePreview();
+            popupOverlay.classList.remove('hidden');
+        });
+        inputTime.addEventListener('input', synchronizeRealtimePreview);
+
+        // Native close interaction behavior trigger inside UI overlay view 
+        closePopupButton.addEventListener('click', () => {
+            popupOverlay.classList.add('hidden');
+        });
+
+        // Initialize synchronization sequence mapping default configuration definitions right after startup execution
+        synchronizeRealtimePreview();
+    </script>
+</body>
+</html>
