@@ -83,7 +83,7 @@
             width: 390px;
             height: 844px;
             background-color: #141414;
-            border-radius: 48px;
+            border-radius: 0px; /* HP KOTAK SEMPURNA SESUAI SCREENSHOT */
             position: relative;
             overflow: hidden;
             box-shadow: 0 0 0 12px #2c2c2e, 0 20px 60px rgba(0,0,0,0.8);
@@ -100,8 +100,8 @@
             width: 110px;
             height: 30px;
             background: #000;
-            border-bottom-left-radius: 18px;
-            border-bottom-right-radius: 18px;
+            border-bottom-left-radius: 0px; /* Notch kotak sempurna */
+            border-bottom-right-radius: 0px; /* Notch kotak sempurna */
             z-index: 10000;
             pointer-events: none;
         }
@@ -146,155 +146,6 @@
             height: 12px;
         }
 
-        /* --- HOMEPAGE UI STRUCTURE --- */
-        .app-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            overflow-y: scroll;
-            scrollbar-width: none; /* Hide standard scrollbar Firefox */
-        }
-
-        .app-container::-webkit-scrollbar {
-            display: none; /* Hide standard scrollbar Chrome/Safari */
-        }
-
-        /* Fixed / Absolute Overlay Elements Context */
-        .header-sticky {
-            position: absolute;
-            top: 47px;
-            left: 0;
-            width: 100%;
-            z-index: 900;
-            background: linear-gradient(to bottom, rgba(20,20,20,0.9) 0%, rgba(20,20,20,0) 100%);
-            padding: 8px 16px;
-        }
-
-        .top-action-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 44px;
-        }
-
-        .vidio-logo {
-            height: 28px;
-            display: flex;
-            align-items: center;
-        }
-
-        .vidio-logo svg {
-            height: 100%;
-        }
-
-        .right-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .action-icon-btn {
-            background: none;
-            border: none;
-            color: #fff;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .avatar-badge {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #e056fd, #7ed6df);
-            color: #fff;
-            font-size: 11px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        /* Category Menu Nav Scroll */
-        .category-nav-container {
-            margin-top: 8px;
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: none;
-        }
-        .category-nav-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .category-tabs {
-            display: inline-flex;
-            gap: 8px;
-            padding-bottom: 4px;
-        }
-
-        .tab-pill {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.8);
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .tab-pill.active {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.25);
-            color: #fff;
-        }
-
-        /* --- BOTTOM NAVIGATION BAR WITH TRANSLUCENT BLUR --- */
-        .bottom-nav-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 83px;
-            background: rgba(20, 20, 20, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 0.5px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            justify-content: space-around;
-            padding-top: 6px;
-            z-index: 950;
-            padding-left: 12px;
-            padding-right: 12px;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #8e8e93;
-            text-decoration: none;
-            gap: 4px;
-            flex: 1;
-        }
-
-        .nav-item.active {
-            color: #ffffff;
-        }
-
-        .nav-icon {
-            width: 22px;
-            height: 22px;
-            fill: currentColor;
-        }
-
-        .nav-label {
-            font-size: 10px;
-            font-weight: 500;
-        }
-
         /* --- IN-APP BANNER POPUP OVERLAY MODIFIED FOR INTEGRATION --- */
         .popup-backdrop-overlay {
             position: absolute;
@@ -322,7 +173,7 @@
             width: 100%;
             max-width: 330px;
             background-image: transparent;
-            border-radius: 15px;
+            border-radius: 15px; /* InApp tetap melengkung */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             padding: 0px;
             position: relative;
@@ -358,7 +209,7 @@
         .promo-image {
             width: 100%;
             height: auto;
-            border-radius: 30px;
+            border-radius: 30px; /* InApp tetap melengkung */
             display: block;
         }
 
@@ -473,23 +324,22 @@
             </div>
         </div>
 
-            <img
-    id="heroImageElement"
-    src="https://thumbor.prod.vidiocdn.com/XU3KP7neB65TmDK_yG1NuzyX9vM=/filters:quality(90)/vidio-pns-prod-gandiwaimage/uploads/image/image_file/23512/Desain_tanpa_judul__4_.png"
-    alt="Homepage Screenshot"
-    style="
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: top;
-        display: block;
-        z-index: 1;
-    "
->
-
+        <img
+            id="heroImageElement"
+            src="https://thumbor.prod.vidiocdn.com/XU3KP7neB65TmDK_yG1NuzyX9vM=/filters:quality(90)/vidio-pns-prod-gandiwaimage/uploads/image/image_file/23512/Desain_tanpa_judul__4_.png"
+            alt="Homepage Screenshot"
+            style="
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: top;
+                display: block;
+                z-index: 1;
+            "
+        >
 
         <div class="popup-backdrop-overlay" id="popupOverlay">
             <div
