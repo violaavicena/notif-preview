@@ -146,14 +146,14 @@
             height: 12px;
         }
 
-        /* --- IN-APP BANNER POPUP OVERLAY MODIFIED FOR INTEGRATION --- */
+        /* --- IN-APP BANNER POPUP OVERLAY STYLES --- */
         .popup-backdrop-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.65);
+            background-color: rgba(0, 0, 0, 0.6);
             z-index: 9999;
             display: flex;
             justify-content: center;
@@ -168,27 +168,36 @@
             pointer-events: none;
         }
 
-        /* Original Source Code Classes Integrated Exactly */
-        .container {
-            width: 100%;
-            max-width: 330px;
-            background-image: transparent;
-            border-radius: 15px; /* InApp tetap melengkung */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            padding: 0px;
+        /* KONTROL UTAMA: Mengatur Ukuran Dasar PopUp */
+        .banner-wrapper {
+            width: 300px;
             position: relative;
-            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform-origin: center center;
+            transition: transform 0.2s ease-out;
         }
 
-        .close-icon {
-            background-color: transparent;
-            border: none;
-            color: white;
+        .close-button {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
+            top: -17px;
+            right: -20px;
+            background: none;
+            border: none;
+            padding: 0;
+            z-index: 9999;
             cursor: pointer;
+            width: 36px;
+            height: 36px;
+            filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.4));
+        }
+
+        .close {
+            display: block;
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
         }
 
         .carousel {
@@ -198,19 +207,17 @@
 
         .carousel-inner {
             display: flex;
-            transition: transform 0.5s ease;
         }
 
         .carousel-item {
             min-width: 100%;
-            box-sizing: border-box;
         }
 
         .promo-image {
             width: 100%;
             height: auto;
-            border-radius: 30px; /* InApp tetap melengkung */
             display: block;
+            border-radius: 20px; /* Gambar InApp tetap melengkung */
         }
 
         .promo-button {
@@ -222,16 +229,16 @@
             color: #fff;
             text-decoration: none;
             font-weight: 750;
-            font-size: 20px;
-            border-radius: 13px;
+            font-size: clamp(15px, 5vw, 19px);
+            border-radius: 12px;
             margin-top: -20px;
             position: relative;
             z-index: 20;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(255, 0, 54, 0.5);
+            text-align: center;
         }
 
-        /* GLOSSY AUTO JALAN TERUS */
         .promo-button::before {
             content: "";
             position: absolute;
@@ -249,7 +256,6 @@
             animation: shineLoop 1.7s infinite;
         }
 
-        /* ANIMASI LOOP */
         @keyframes shineLoop {
             0% {
                 left: -75%;
@@ -263,23 +269,6 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgb(255, 0, 55);
         }
-
-        .close-button {
-            position: absolute;
-            top: -18px;
-            right: -23px;
-            background: none;
-            border: none;
-            padding: 0;
-            z-index: 9999;
-        }
-
-        .close {
-            display: block;
-            width: 95%;
-            position: relative;
-            z-index: 9999;
-        }
     </style>
 </head>
 <body>
@@ -292,11 +281,11 @@
         </div>
         <div class="form-group">
             <label for="inputPopupKv">Popup KV URL</label>
-            <input type="text" id="inputPopupKv" value="https://thumbor.prod.vidiocdn.com/aoSMOLPoW-gTdqBPcz8opUf6l_U=/filters:quality(90)/vidio-pns-prod-gandiwaimage/uploads/image/image_file/23447/MANIS_DI_BIBIR_EXPRESS_EP3.png">
+            <input type="text" id="inputPopupKv" value="https://thumbor.prod.vidiocdn.com/Z746NeUO3TEzLQP_tVvuBVI19u4=/filters:quality(90)/vidio-pns-prod-gandiwaimage/uploads/image/image_file/23590/IGF_Volleyball_Friendly_Match_MATCH.jpg">
         </div>
         <div class="form-group">
             <label for="inputCtaText">CTA Text</label>
-            <input type="text" id="inputCtaText" value="Nonton Duluan">
+            <input type="text" id="inputCtaText" value="Langganan Sekarang">
         </div>
         <div class="form-group">
             <label for="inputTime">Time (Status Bar)</label>
@@ -305,7 +294,7 @@
     </div>
     
 
-    <div class="phone-viewport">
+    <div class="phone-viewport" id="phoneViewport">
         
         <div class="status-bar">
             <div class="status-left" id="statusBarTime">1.41</div>
@@ -341,52 +330,35 @@
             "
         >
 
+        <!-- IN-APP POPUP OVERLAY PERBAIKAN -->
         <div class="popup-backdrop-overlay" id="popupOverlay">
-            <div
-              class="container"
-              style="
-                position: absolute;
-                line-height: 1.42857;
-                font-family: CircularXXWeb-Regular, Arial, sans-serif;
-                -webkit-font-smoothing: antialiased;
-                font-feature-settings: &quot;ss08&quot; on;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                right: 0px;
-                border: 2px solid;
-                border-color: rgba(120, 255, 255, 0) !important;
-                border-radius: 0px;
-                background-repeat: no-repeat;
-                background-size: 100% 100%;
-                width: 100%;
-                text-align: center;
-                box-shadow: none;
-              "
-            >
-              <button class="close-button" id="closePopupButton" data-dismiss="true">
-                <img
-                  class="close"
-                  src="https://thumbor.prod.vidiocdn.com/-TZJl0nIYqCx4D3ffuR5Jint3eA=/filters:quality(90)/vidio-pns-prod-gandiwaimage/uploads/image/image_file/22924/cancel__2_.png"
-                  alt="NA"
-                />
-              </button>
-              <div class="carousel">
-                <div class="carousel-inner">
-                  <div class="carousel-item">
-                    <a href="#">
-                      <img
-                        id="popupKvImage"
-                        src=""
-                        alt="Promo Image 1"
-                        class="promo-image"
-                        style="object-fit: cover;"
-                      />
-                    </a>
-                  </div>
+            <div class="banner-wrapper" id="bannerWrapper">
+                <button class="close-button" id="closePopupButton" data-dismiss="true" aria-label="Close">
+                    <img
+                        class="close"
+                        src="https://thumbor.prod.vidiocdn.com/-TZJl0nIYqCx4D3ffuR5Jint3eA=/filters:quality(90)/vidio-pns-prod-gandiwaimage/uploads/image/image_file/22924/cancel__2_.png"
+                        alt="Close"
+                    />
+                </button>
+                
+                <div class="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item">
+                            <a href="#">
+                                <img
+                                    id="popupKvImage"
+                                    src="https://thumbor.prod.vidiocdn.com/Z746NeUO3TEzLQP_tVvuBVI19u4=/filters:quality(90)/vidio-pns-prod-gandiwaimage/uploads/image/image_file/23590/IGF_Volleyball_Friendly_Match_MATCH.jpg"
+                                    alt="Promo Image 1"
+                                    class="promo-image"
+                                />
+                            </a>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <a class="promo-button" id="popupCtaButton" href="#">Ambil Promo Sekarang</a>
+
+                <a class="promo-button" id="popupCtaButton" href="#">
+                    Langganan Sekarang
+                </a>
             </div>
         </div>
 
@@ -405,30 +377,41 @@
         const popupCtaButton = document.getElementById('popupCtaButton');
         const popupOverlay = document.getElementById('popupOverlay');
         const closePopupButton = document.getElementById('closePopupButton');
+        const phoneViewport = document.getElementById('phoneViewport');
+        const bannerWrapper = document.getElementById('bannerWrapper');
 
-        /**
-         * Real-time sync pipeline linking values from form field inputs 
-         * directly into responsive visual components instantly.
-         */
+        // Automatic Scaling Logic
+        function scaleBanner() {
+            const vw = phoneViewport.clientWidth;
+            const vh = phoneViewport.clientHeight;
+
+            const baseWidth = 300;
+            const baseHeight = 420;
+
+            const availableWidth = vw - 40; 
+            const availableHeight = vh - 60;
+
+            const scaleX = availableWidth / baseWidth;
+            const scaleY = availableHeight / baseHeight;
+
+            let scale = Math.min(scaleX, scaleY);
+            scale = Math.min(Math.max(scale, 0.6), 1.25);
+
+            bannerWrapper.style.transform = `scale(${scale})`;
+        }
+
+        // Real-time Sync Function
         function synchronizeRealtimePreview() {
-            // 1. Update Homepage Main Hero Placement Background
             heroImageElement.src = inputHeroUrl.value;
-
-            // 2. Update Overlay Modal Key Visual Vector Graphic Asset
             popupKvImage.src = inputPopupKv.value;
-
-            // 3. Update Text Content inside High-Gloss CTA Button Component
             popupCtaButton.textContent = inputCtaText.value;
-
-            // 4. Synchronize iPhone Telephony Status Bar Clock Data
             statusBarTime.textContent = inputTime.value;
         }
 
-        // Add Realtime input listeners to all text fields
+        // Event Listeners
         inputHeroUrl.addEventListener('input', synchronizeRealtimePreview);
         inputCtaText.addEventListener('input', () => {
             synchronizeRealtimePreview();
-            // Force modal visibility instantly back to context state when typing elements inside it
             popupOverlay.classList.remove('hidden');
         });
         inputPopupKv.addEventListener('input', () => {
@@ -437,13 +420,14 @@
         });
         inputTime.addEventListener('input', synchronizeRealtimePreview);
 
-        // Native close interaction behavior trigger inside UI overlay view 
         closePopupButton.addEventListener('click', () => {
             popupOverlay.classList.add('hidden');
         });
 
-        // Initialize synchronization sequence mapping default configuration definitions right after startup execution
+        // Init
         synchronizeRealtimePreview();
+        scaleBanner();
+        window.addEventListener('resize', scaleBanner);
     </script>
 </body>
 </html>
